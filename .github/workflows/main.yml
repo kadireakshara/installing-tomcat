@@ -20,7 +20,7 @@ jobs:
          wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.89/bin/apache-tomcat-9.0.89.tar.gz
          sudo mv apache-tomcat-$TOMCAT_VERSION.tar.gz /opt/tomcat
      - name: Set Tomcat Permissions
-       run: chmod +x tomcat/bin/*.sh
+       run: sudo chmod -R 755 /opt/tomcat
      - name: Start Tomcat
        run: |
         sh tomcat/bin/startup.sh
