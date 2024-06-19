@@ -23,8 +23,8 @@ jobs:
        run: chmod +x tomcat/bin/*.sh
      - name: Start Tomcat
        run: |
-       sh tomcat/bin/startup.sh
-       sleep 5
+        sh tomcat/bin/startup.sh
+        sleep 5
      - name: Configure Tomcat
        run: |
          # Example change: Update port from 8080 to 9090 in server.xml
