@@ -9,12 +9,12 @@ jobs:
    runs-on: ubuntu-latest
    steps:
      - name: Checkout Repository
-       uses: actions/checkout@v3
+       uses: actions/checkout@v4
      - name: Install Dependencies
        run: sudo apt-get update && sudo apt-get install -y wget openjdk-11-jdk
      - name: Download Tomcat
        run: |
-         TOMCAT_VERSION=9.0.65
+         TOMCAT_VERSION="10.0.27"
          wget https://downloads.apache.org/tomcat/tomcat-9/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz
          tar -xvf apache-tomcat-$TOMCAT_VERSION.tar.gz
          sudo mv apache-tomcat-$TOMCAT_VERSION /usr/local/tomcat
