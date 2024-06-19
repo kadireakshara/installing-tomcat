@@ -22,7 +22,7 @@ jobs:
      - name: Set Tomcat Permissions
        run: sudo chmod -R 755 /opt/tomcat
      - name: Start Tomcat
-       run: systemctl start tomcat.service
+       run: sudo systemctl start tomcat
      - name: Configure Tomcat
        run: |
          # Example change: Update port from 8080 to 9090 in server.xml
