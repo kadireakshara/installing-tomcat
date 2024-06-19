@@ -1,0 +1,39 @@
+name: Install and Configure Tomcat
+on:
+ push:
+   branches:
+     - main
+ workflow_dispatch:
+jobs:
+ setup-tomcat:
+   runs-on: ubuntu-latest
+   steps:
+     - name: Checkout Repository
+       uses: actions/checkout@v3
+     - name: Install Dependencies
+       run: sudo apt-get update && sudo apt-get install -y wget openjdk-11-jdk
+     - name: Download Tomcat
+       run: |
+         TOMCAT_VERSION=9.0.65
+         wget https://downloads.apache.org/tomcat/tomcat-9/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz
+         tar -xvf apache-tomcat-$TOMCAT_VERSION.tar.gz
+         sudo mv apache-tomcat-$TOMCAT_VERSION /usr/local/tomcat
+     - name: Set Tomcat Permissions
+       run: sudo chmod -R 755 /usr/local/tomcat
+     - name: Start Tomcat
+       run: /usr/local/tomcat/bin/startup.sh
+     - name: Configure Tomcat
+       run: |
+         sudo sed -i 's/8080/9090/g' /usr/local/tomcat/conf/server.xml
+         # Add additional configuration changes here
+     - name: Restart Tomcat
+       run: |
+         /usr/local/tomcat/bin/shutdown.sh
+         sleep 5
+         /usr/local/tomcat/bin/startup.sh
+     - name: Verify Tomcat Installation
+       run: curl -I http://localhost:9090
+     - name: Save Logs
+       run: |
+         cat /usr/local/tomcat/logs/catalina.out
+       continue-on-error: true
