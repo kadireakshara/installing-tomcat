@@ -1,4 +1,4 @@
-name: Install and Configure Tomcat
+name: Setup and Configure Tomcat
 on:
  push:
    branches:
@@ -9,31 +9,35 @@ jobs:
    runs-on: ubuntu-latest
    steps:
      - name: Checkout Repository
-       uses: actions/checkout@v4
+       uses: actions/checkout@v3
      - name: Install Dependencies
-       run: sudo apt-get update && sudo apt-get install -y wget openjdk-11-jdk
+       run: |
+         sudo apt-get update
+         sudo apt-get install -y wget openjdk-11-jdk
      - name: Download Tomcat
        run: |
-         TOMCAT_VERSION="10.0.27"
-         wget https://downloads.apache.org/tomcat/tomcat-9/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz
-         tar -xvf apache-tomcat-$TOMCAT_VERSION.tar.gz
-         sudo mv apache-tomcat-$TOMCAT_VERSION /usr/local/tomcat
+         TOMCAT_VERSION=9.0.65
+         wget https://dlcdn.apache.org/tomcat/tomcat-9/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz
+         tar -xzf apache-tomcat-$TOMCAT_VERSION.tar.gz
+         sudo mv apache-tomcat-$TOMCAT_VERSION /opt/tomcat
      - name: Set Tomcat Permissions
-       run: sudo chmod -R 755 /usr/local/tomcat
+       run: sudo chmod -R 755 /opt/tomcat
      - name: Start Tomcat
-       run: /usr/local/tomcat/bin/startup.sh
+       run: /opt/tomcat/bin/startup.sh
      - name: Configure Tomcat
        run: |
-         sudo sed -i 's/8080/9090/g' /usr/local/tomcat/conf/server.xml
-         # Add additional configuration changes here
+         # Example change: Update port from 8080 to 9090 in server.xml
+         sudo sed -i 's/8080/9090/g' /opt/tomcat/conf/server.xml
+         # Example change: Add user to tomcat-users.xml
+         sudo sed -i '/<\/tomcat-users>/i \  <user username="admin" password="password" roles="manager-gui,admin-gui"/>' /opt/tomcat/conf/tomcat-users.xml
      - name: Restart Tomcat
        run: |
-         /usr/local/tomcat/bin/shutdown.sh
+         /opt/tomcat/bin/shutdown.sh
          sleep 5
-         /usr/local/tomcat/bin/startup.sh
+         /opt/tomcat/bin/startup.sh
      - name: Verify Tomcat Installation
        run: curl -I http://localhost:9090
      - name: Save Logs
        run: |
-         cat /usr/local/tomcat/logs/catalina.out
+         cat /opt/tomcat/logs/catalina.out
        continue-on-error: true
